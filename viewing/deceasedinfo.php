@@ -6,14 +6,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $searchQuery = $_POST["searchQuery"];
 
     // Modify your SQL query based on the search criteria
-    $result = $con->query("SELECT * FROM registered_deceased WHERE 
-        NAME LIKE '%$searchQuery%' OR 
-        LASTNAME LIKE '%$searchQuery%' OR
-        CONCAT(NAME, ' ', LASTNAME) LIKE '%$searchQuery%'
+    $result = $con->query("SELECT rd.*, g.SECTION_NO 
+        FROM registered_deceased rd
+        INNER JOIN grave g ON rd.GRAVE_ID = g.GRAVE_ID
+        WHERE 
+            rd.NAME LIKE '%$searchQuery%' OR 
+            rd.LASTNAME LIKE '%$searchQuery%' OR
+            CONCAT(rd.NAME, ' ', rd.LASTNAME) LIKE '%$searchQuery%'
     ");
 } else {
     // Default query without filtering
-    $result = $con->query("SELECT * FROM registered_deceased");
+    $result = $con->query("SELECT rd.*, g.SECTION_NO 
+        FROM registered_deceased rd
+        INNER JOIN grave g ON rd.GRAVE_ID = g.GRAVE_ID
+    ");
 }
 ?>
 
@@ -108,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">IMAGE</th>
-                                    <th scope="col">AREA</th>
+                                    <th scope="col">GRAVE</th>
                                     <th scope="col">FIRST NAME</th>
                                     <th scope="col">LAST NAME</th>
                                     <th scope="col">BORN DATE</th>
@@ -121,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 ?>
                                     <tr>
                                         <td><img src="/cemeterysystemtothemoon/assets/img/<?php echo $value['img'] ?>" alt="img" height="50" width="50"></td>
-                                        <td><?php echo $value['GRAVE_ID'] ?></td>
+                                        <td><?php echo $value['SECTION_NO'] ?></td>
                                         <td><?php echo $value['NAME'] ?></td>
                                         <td><?php echo $value['LASTNAME'] ?></td>
                                         <td><?php echo $value['BORN_DATE'] ?></td>

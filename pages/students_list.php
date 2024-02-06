@@ -1,3 +1,27 @@
+<?php
+include 'conixion.php';
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $searchQuery = $_POST["searchQuery"];
+
+    // Modify your SQL query based on the search criteria
+    $result = $con->query("SELECT rd.*, g.SECTION_NO 
+        FROM registered_deceased rd
+        INNER JOIN grave g ON rd.GRAVE_ID = g.GRAVE_ID
+        WHERE 
+            rd.NAME LIKE '%$searchQuery%' OR 
+            rd.LASTNAME LIKE '%$searchQuery%' OR
+            CONCAT(rd.NAME, ' ', rd.LASTNAME) LIKE '%$searchQuery%'
+    ");
+} else {
+    // Default query without filtering
+    $result = $con->query("SELECT rd.*, g.SECTION_NO 
+        FROM registered_deceased rd
+        INNER JOIN grave g ON rd.GRAVE_ID = g.GRAVE_ID
+    ");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +35,19 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
         
+        <script>
+    document.getElementById('searchQuery').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            submitForm();
+        }
+    });
 
+    function submitForm() {
+        // Your form submission logic goes here
+        // For example, you can use document.forms[0].submit();
+        console.log('Form submitted');
+    }
+</script>
 </head>
 
 <body class="bg-content">
@@ -32,15 +68,28 @@
             <!-- start student list table -->
             <div class="student-list-header d-flex justify-content-between align-items-center py-2">
                 <div class="title h6 fw-bold">Deceased List</div>
+                <div class="container">
+   
+
+</div>
+<form action="" method="post" class="form-inline search-bar" id="searchForm">
+    <div class="form-group mb-2">
+        <label for="searchQuery" class="sr-only">Search</label>
+        <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Search" style="width: 150px;">
+    </div>
+    <!-- No need for the button -->
+</form>
+
+
                 <div class="btn-add d-flex gap-3 align-items-center">
                     <div class="short">
                         
-                    <i class="far fa-sort"></i>
+                    
                     </div>
                     <!-- PARA SA ADD MODAL  --> 
                     <div class="button-add-deceased">
                          
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeceasedModal">Add deceased person</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeceasedModal">Add Deceased Person</button>
     <div class="modal fade" id="addDeceasedModal" tabindex="-1" aria-labelledby="addDeceasedModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -107,14 +156,12 @@
                     </thead>
                     <tbody>
                         <?php
-                          include 'conixion.php';
-                          $result = $con -> query("SELECT * FROM registered_deceased");
-                          foreach($result as $value):
+                          foreach ($result as $value) :
                         ?>
                         
                       <tr class="bg-white align-middle">
                         <td><img src="../assets/img/<?php echo $value['img'] ?>" alt="img" height="50" with="50"></td>
-                        <td><?php echo $value['GRAVE_ID'] ?></td>
+                        <td><?php echo $value['SECTION_NO'] ?></td>
                         <td><?php echo $value['NAME'] ?></td>
                         <td><?php echo $value['LASTNAME'] ?></td>
                         <td><?php echo $value['BORN_DATE'] ?></td>

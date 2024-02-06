@@ -67,11 +67,7 @@ input[type="email"]::placeholder,input[type="password"]::placeholder{
 }
 /* start dashboard */
 /* start sidebar */
-.bg-sidebar {
-    background-color: #00C1FE !important;
-    transition: margin 0.6s ease-in-out;
-    z-index: 1;
-}
+
 .bg-content{
     background:#F8F8F8;
 }

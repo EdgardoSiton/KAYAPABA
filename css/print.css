@@ -1,0 +1,31 @@
+/* print.css */
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table, .table th, .table td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+/* Hide sidebar and other elements for printing */
+@media print {
+    .sidebar {
+        display: none !important;
+    }
+
+    .print-header {
+        display: block !important;
+    }
+}
